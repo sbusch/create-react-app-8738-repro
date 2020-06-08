@@ -71,7 +71,7 @@ const webpackConfig = {
             [
               require("@babel/plugin-transform-classes").default,
               {
-                loose: true,
+                loose: false,
               },
             ],
           ],
