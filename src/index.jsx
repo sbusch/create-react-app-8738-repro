@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
+// eslint-disable-next-line no-unused-vars
 const Global = () => <span>GLOBAL</span>;
 
 class App extends React.Component {
