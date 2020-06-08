@@ -65,12 +65,14 @@ const webpackConfig = {
                 loose: true,
               },
             ],
+            /*
             [
               "@babel/plugin-transform-classes",
               {
                 loose: false,
               },
             ],
+            //*/
           ],
         },
       },
