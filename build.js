@@ -148,6 +148,3 @@ new Promise((resolve, reject) => {
     }
     process.exit(1);
   });
-
-// Create the production build and print the deployment instructions.
-function build() {}
