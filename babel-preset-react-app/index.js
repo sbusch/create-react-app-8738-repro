@@ -58,11 +58,8 @@ const create = function (api, opts) {
         },
       ],
       [
-        require("@babel/preset-react").default,
+        require("../babel--preset-react").default,
         {
-          // Adds component stack to warning messages
-          // Adds __self attribute to JSX which React will use for some warnings
-          development: false,
           // Will use the native built-in instead of trying to polyfill
           // behavior for any plugins that require one.
           useBuiltIns: true,
@@ -99,7 +96,7 @@ const create = function (api, opts) {
       [
         require("@babel/plugin-proposal-class-properties").default,
         {
-          loose: false,
+          loose: true,
         },
       ],
       // Polyfills the runtime needed for async/await, generators, and friends
