@@ -8,7 +8,7 @@ class App extends React.Component {
   First = () => <this.Second />; // <- problem
   // First = () => <Global />; // <- no problem
 
-  Second = () => <span>SECOND</span>;
+  Second = () => <span>SE<span style={{fontWeight: 'bold'}}>COND</span></span>;
 
   render() {
     return <this.First />;

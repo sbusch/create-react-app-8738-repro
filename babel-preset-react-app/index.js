@@ -4,7 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-'use strict';
+"use strict";
 
 const path = require("path");
 
@@ -45,8 +45,9 @@ const create = function (api, opts) {
   }
 
   return {
+    plugins: ["transform-classes"],
     presets: [
-      [
+      false && [
         // Latest stable ECMAScript features
         require("@babel/preset-env").default,
         {
@@ -55,6 +56,42 @@ const create = function (api, opts) {
           // Set the corejs version we are using to avoid warnings in console
           // This will need to change once we upgrade to corejs@3
           corejs: 3,
+          debug: true,
+          exclude: [
+            "proposal-nullish-coalescing-operator",
+            "proposal-optional-chaining",
+            "proposal-json-strings",
+            "proposal-optional-catch-binding",
+            "transform-parameters",
+            "proposal-async-generator-functions",
+            "proposal-object-rest-spread",
+            "transform-dotall-regex",
+            "proposal-unicode-property-regex",
+            "transform-named-capturing-groups-regex",
+            "transform-async-to-generator",
+            "transform-exponentiation-operator",
+            "transform-template-literals",
+            "transform-literals",
+            "transform-function-name",
+            "transform-arrow-functions",
+            // "transform-classes",
+            "transform-object-super",
+            "transform-shorthand-properties",
+            "transform-duplicate-keys",
+            "transform-computed-properties",
+            "transform-for-of",
+            "transform-sticky-regex",
+            "transform-unicode-regex",
+            "transform-spread",
+            "transform-destructuring",
+            "transform-block-scoping",
+            "transform-typeof-symbol",
+            "transform-new-target",
+            "transform-regenerator",
+            // "syntax-dynamic-import",
+            // "syntax-top-level-await",
+          ],
+          // loose: true
         },
       ],
       [
@@ -62,46 +99,29 @@ const create = function (api, opts) {
         {
           // Will use the native built-in instead of trying to polyfill
           // behavior for any plugins that require one.
-          useBuiltIns: true,
+          // useBuiltIns: true,
+          // useBuiltIns: false,
         },
       ],
-    ],
+    ].filter(Boolean),
     plugins: [
-      // Disabled as it's handled automatically by preset-env, and `selectiveLoose` isn't
-      // yet merged into babel: https://github.com/babel/babel/pull/9486
-      // Related: https://github.com/facebook/create-react-app/pull/8215
-      // [
-      //   require('@babel/plugin-transform-destructuring').default,
-      //   {
-      //     // Use loose mode for performance:
-      //     // https://github.com/facebook/create-react-app/issues/5602
-      //     loose: false,
-      //     selectiveLoose: [
-      //       'useState',
-      //       'useEffect',
-      //       'useContext',
-      //       'useReducer',
-      //       'useCallback',
-      //       'useMemo',
-      //       'useRef',
-      //       'useImperativeHandle',
-      //       'useLayoutEffect',
-      //       'useDebugValue',
-      //     ],
-      //   },
-      // ],
-      // class { handleClick = () => { } }
-      // Enable loose mode to use assignment instead of defineProperty
-      // See discussion in https://github.com/facebook/create-react-app/issues/4263
       [
         require("@babel/plugin-proposal-class-properties").default,
         {
+          // Enable loose mode to use assignment instead of defineProperty
+          // See discussion in https://github.com/facebook/create-react-app/issues/4263
           loose: true,
         },
       ],
+      [
+        require("@babel/plugin-transform-classes").default,
+        {
+          loose: true,
+        }
+      ],
       // Polyfills the runtime needed for async/await, generators, and friends
       // https://babeljs.io/docs/en/babel-plugin-transform-runtime
-      [
+      false && [
         require("@babel/plugin-transform-runtime").default,
         {
           corejs: false,
@@ -125,6 +145,6 @@ const create = function (api, opts) {
   };
 };
 
-module.exports = function(api, opts) {
+module.exports = function (api, opts) {
   return create(api, opts);
 };
