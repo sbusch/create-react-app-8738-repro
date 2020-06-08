@@ -1,9 +1,5 @@
 "use strict";
 
-// Do this as the first thing so that any code reading it knows the right env.
-process.env.BABEL_ENV = "production";
-process.env.NODE_ENV = "production";
-
 // Makes the script crash on unhandled rejections instead of silently ignoring them.
 process.on("unhandledRejection", (err) => {
   throw err;
@@ -72,7 +68,7 @@ const webpackConfig = {
             [
               "@babel/plugin-transform-classes",
               {
-                loose: true,
+                loose: false,
               },
             ],
           ],
@@ -81,6 +77,11 @@ const webpackConfig = {
     ],
   },
   plugins: [
+    // Despite production build, let React (react, react-dom, ...) pretend to be
+    // in development mode (production mode masks runtime errors behind "Minified
+    // React errors")
+    new webpack.DefinePlugin({ "process.env.NODE_ENV": JSON.stringify("development") }),
+
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({
       templateContent: `<!DOCTYPE html>
