@@ -50,6 +50,7 @@ const webpackConfig = {
     },
     runtimeChunk: true,
   },
+  performance: false,
   module: {
     strictExportPresence: true,
     rules: [
@@ -61,7 +62,7 @@ const webpackConfig = {
           plugins: [
             "@babel/plugin-transform-react-jsx",
             [
-              require("@babel/plugin-proposal-class-properties").default,
+              "@babel/plugin-proposal-class-properties",
               {
                 // Enable loose mode to use assignment instead of defineProperty
                 // See discussion in https://github.com/facebook/create-react-app/issues/4263
@@ -69,9 +70,9 @@ const webpackConfig = {
               },
             ],
             [
-              require("@babel/plugin-transform-classes").default,
+              "@babel/plugin-transform-classes",
               {
-                loose: false,
+                loose: true,
               },
             ],
           ],
@@ -95,7 +96,6 @@ const webpackConfig = {
       minify: false,
     }),
   ],
-  performance: false,
 };
 
 // Remove all content of build path
