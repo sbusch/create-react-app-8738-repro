@@ -16,7 +16,6 @@ const chalk = require("react-dev-utils/chalk");
 const fs = require("fs-extra");
 const webpack = require("webpack");
 const formatWebpackMessages = require("react-dev-utils/formatWebpackMessages");
-const printHostingInstructions = require("react-dev-utils/printHostingInstructions");
 const printBuildError = require("react-dev-utils/printBuildError");
 
 const HtmlWebpackPlugin = require("html-webpack-plugin");
@@ -36,8 +35,7 @@ const paths = {
   appSrc: resolveApp("src"),
 };
 
-console.log(paths);
-// throw new Error('sdf');
+// console.log(paths);
 
 const webpackConfig = {
   mode: "production",
@@ -92,18 +90,28 @@ const webpackConfig = {
     strictExportPresence: true,
     rules: [
       // Process application JS with Babel.
-      // The preset includes JSX, Flow, TypeScript, and some ESnext features.
       {
-        test: /\.(js|mjs|jsx|ts|tsx)$/,
+        test: /\.(js|jsx)$/,
         include: paths.appSrc,
         loader: require.resolve("babel-loader"),
         options: {
-          // Disable caching results in ./node_modules/.cache/babel-loader/ directory for faster rebuilds.
-          // (feature of `babel-loader` for webpack (not Babel itself))
-          cacheDirectory: false,
-          // See #6846 for context on why cacheCompression is disabled
-          cacheCompression: false,
-          compact: false,
+          plugins: [
+            "@babel/plugin-transform-react-jsx",
+            [
+              require("@babel/plugin-proposal-class-properties").default,
+              {
+                // Enable loose mode to use assignment instead of defineProperty
+                // See discussion in https://github.com/facebook/create-react-app/issues/4263
+                loose: true,
+              },
+            ],
+            [
+              require("@babel/plugin-transform-classes").default,
+              {
+                loose: true,
+              },
+            ],
+          ],
         },
       },
     ],
@@ -111,8 +119,17 @@ const webpackConfig = {
   plugins: [
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({
-      inject: true,
-      template: paths.appHtml,
+      // template: paths.appHtml,
+      templateContent: `<!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta charset="utf-8" />
+        </head>
+        <body>
+          <div id="root"></div>
+        </body>
+      </html>
+      `,
       minify: false,
     }),
   ],
@@ -120,38 +137,20 @@ const webpackConfig = {
   performance: false,
 };
 
-// We require that you explicitly set browsers and do not fall back to
-// browserslist defaults.
-const { checkBrowsers } = require("react-dev-utils/browsersHelper");
-checkBrowsers(paths.appPath, true) // isInteractive == true
-  .then(() => {
-    // Remove all content but keep the directory so that
-    // if you're in it, you don't end up in Trash
-    fs.emptyDirSync(paths.appBuild);
-    // Merge with the public folder
-    copyPublicFolder();
-    // Start the webpack build
-    return build();
-  })
+// Remove all content but keep the directory so that
+// if you're in it, you don't end up in Trash
+fs.emptyDirSync(paths.appBuild);
+
+// Start the webpack build
+build()
   .then(
-    ({ _stats_, warnings }) => {
+    (warnings) => {
       if (warnings.length) {
         console.log(chalk.yellow("Compiled with warnings.\n"));
         console.log(warnings.join("\n\n"));
       } else {
         console.log(chalk.green("Compiled successfully.\n"));
       }
-
-      const appPackage = require(paths.appPackageJson);
-      const publicPath = webpackConfig.output.publicPath;
-      const buildFolder = path.relative(process.cwd(), paths.appBuild);
-      printHostingInstructions(
-        appPackage,
-        "/",
-        publicPath,
-        buildFolder,
-        true // useYarn
-      );
     },
     (err) => {
       console.log(chalk.red("Failed to compile.\n"));
@@ -168,8 +167,6 @@ checkBrowsers(paths.appPath, true) // isInteractive == true
 
 // Create the production build and print the deployment instructions.
 function build() {
-  console.log("Creating an optimized production build...");
-
   const compiler = webpack(webpackConfig);
   return new Promise((resolve, reject) => {
     compiler.run((err, stats) => {
@@ -198,17 +195,7 @@ function build() {
         }
         return reject(new Error(messages.errors.join("\n\n")));
       }
-      return resolve({
-        stats,
-        warnings: messages.warnings,
-      });
+      return resolve(messages.warnings);
     });
-  });
-}
-
-function copyPublicFolder() {
-  fs.copySync(paths.appPublic, paths.appBuild, {
-    dereference: true,
-    filter: (file) => file !== paths.appHtml,
   });
 }
