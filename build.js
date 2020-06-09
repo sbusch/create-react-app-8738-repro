@@ -29,7 +29,7 @@ const webpackConfig = {
   // Stop compilation early in production
   bail: true,
   devtool: "source-map",
-  entry: ["./src/index.jsx"],
+  entry: "./src/index.jsx",
   output: {
     path: buildPath,
     futureEmitAssets: true,
@@ -56,7 +56,13 @@ const webpackConfig = {
         loader: require.resolve("babel-loader"),
         options: {
           plugins: [
-            "@babel/plugin-transform-react-jsx",
+            [
+              "@babel/plugin-transform-react-jsx",
+              {
+                pure: false
+                // runtime: 'automatic'
+              },
+            ],
             [
               "@babel/plugin-proposal-class-properties",
               {
@@ -65,7 +71,7 @@ const webpackConfig = {
                 loose: true,
               },
             ],
-            /*
+            //*
             [
               "@babel/plugin-transform-classes",
               {
@@ -82,7 +88,9 @@ const webpackConfig = {
     // Despite production build, let React (react, react-dom, ...) pretend to be
     // in development mode (production mode masks runtime errors behind "Minified
     // React errors")
-    new webpack.DefinePlugin({ "process.env.NODE_ENV": JSON.stringify("development") }),
+    new webpack.DefinePlugin({
+      "process.env.NODE_ENV": JSON.stringify("development"),
+    }),
 
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({
@@ -93,6 +101,7 @@ const webpackConfig = {
         </head>
         <body>
           <div id="root"></div>
+          <div id="root2"></div>
         </body>
       </html>
       `,
