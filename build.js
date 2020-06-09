@@ -14,14 +14,8 @@ const printBuildError = require("react-dev-utils/printBuildError");
 
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
-// Make sure any symlinks in the project folder are resolved:
-// https://github.com/facebook/create-react-app/issues/637
-const appDirectory = fs.realpathSync(process.cwd());
-const resolveApp = (relativePath) => path.resolve(appDirectory, relativePath);
-
-const buildPath = resolveApp("build");
-const srcPath = resolveApp("src");
-
+const buildPath = path.resolve(__dirname, "./build");
+const srcPath = path.resolve(__dirname, "./src");
 // console.log("paths", { buildPath, srcPath });
 
 const webpackConfig = {
@@ -35,9 +29,6 @@ const webpackConfig = {
     futureEmitAssets: true,
     filename: "static/js/[name].js",
     chunkFilename: "static/js/[name].chunk.js",
-    // Point sourcemap entries to original disk location (format as URL on Windows)
-    devtoolModuleFilenameTemplate: (info) =>
-      path.relative(srcPath, info.absoluteResourcePath).replace(/\\/g, "/"),
   },
   optimization: {
     minimize: false,
@@ -59,7 +50,7 @@ const webpackConfig = {
             [
               "@babel/plugin-transform-react-jsx",
               {
-                pure: false
+                pure: false,
                 // runtime: 'automatic'
               },
             ],
