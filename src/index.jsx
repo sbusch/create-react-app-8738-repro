@@ -1,25 +1,21 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-const Global = () => <span>WORKS (global var)</span>;
 
-class App extends React.Component {
-  First = () => <this.Second />; // <- problem
-  // First = () => <Global />; // <- no problem
-
-  Second = () => <span>WORKS (JSX)</span>;
-
+// Plain old JavaScript class -> no problem
+class PojoTest {
+  First = () => this.Second();
+  Second = () => "Success (PojoTest)";
   render() {
-    return <this.First />;
+    return this.First();
   }
 }
 
-class App2 extends React.Component {
-  // First = () => this.Second();
-  // Second = () => "WORKS (non JSX version)";
-
+// Component without JSX -> no problem
+class ComponentWithoutJsx extends React.Component {
   First = () => React.createElement(this.Second, null); // this.Second();
-  Second = () => React.createElement('span', null, "WORKS (non JSX version)");
+  Second = () =>
+    React.createElement("span", null, "SUCCESS (ComponentWithoutJsx)");
 
   render() {
     // return this.First();
@@ -27,9 +23,22 @@ class App2 extends React.Component {
   }
 }
 
-// const t = new Test();
-// console.log(t.render());
+// Component with JSX -> no problem
+// const Global = () => <span>WORKS (global var)</span>;
+class ComponentWithJsx extends React.Component {
+  First = () => <this.Second />; // <- problem
+  // First = () => <Global />; // <- no problem
 
-ReactDOM.render(<App2 />, document.getElementById("root2"));
+  Second = () => <span>SUCCESS (ComponentWithJsx)</span>;
 
-ReactDOM.render(<App />, document.getElementById("root"));
+  render() {
+    return <this.First />;
+  }
+}
+
+const pojoTest = new PojoTest();
+console.log(pojoTest.render());
+
+ReactDOM.render(<ComponentWithoutJsx />, document.getElementById("test1"));
+
+ReactDOM.render(<ComponentWithJsx />, document.getElementById("test2"));

@@ -47,8 +47,8 @@ module.exports = {
             [
               "@babel/plugin-transform-react-jsx",
               {
-                // Rule out that PURE markers are 
-                pure: false
+                // Rule out that PURE markers are
+                pure: false,
               },
             ],
             [
@@ -63,7 +63,7 @@ module.exports = {
             [
               "@babel/plugin-transform-classes",
               {
-                loose: true,
+                loose: false,
               },
             ],
             //*/
@@ -90,8 +90,8 @@ module.exports = {
           <meta charset="utf-8" />
         </head>
         <body>
-          <div id="root"></div>
-          <div id="root2"></div>
+          <div id="test1"></div>
+          <div id="test2"></div>
         </body>
       </html>
       `,
