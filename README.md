@@ -2,7 +2,7 @@
 
 This is a repro for[ `facebook/create-react-app`](https://github.com/facebook/create-react-app/issues/8738) issue [#8736 Minified React error #130 - 'this' in JSX arrow function (06/2020)](https://github.com/facebook/create-react-app/issues/8738)
 
-`create-react-app` has been ejected and reducted to the absolute minimum.
+`create-react-app` had been ejected and reduced to the absolute minimum.
 
 ## Steps to reproduce
 
