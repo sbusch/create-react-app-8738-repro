@@ -6,19 +6,16 @@ process.on("unhandledRejection", (err) => {
 });
 
 const path = require("path");
-const chalk = require("react-dev-utils/chalk");
-const fs = require("fs-extra");
 const webpack = require("webpack");
-const formatWebpackMessages = require("react-dev-utils/formatWebpackMessages");
-const printBuildError = require("react-dev-utils/printBuildError");
 
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 const buildPath = path.resolve(__dirname, "./build");
 const srcPath = path.resolve(__dirname, "./src");
 // console.log("paths", { buildPath, srcPath });
 
-const webpackConfig = {
+module.exports = {
   mode: "production",
   // Stop compilation early in production
   bail: true,
@@ -50,8 +47,8 @@ const webpackConfig = {
             [
               "@babel/plugin-transform-react-jsx",
               {
-                pure: false,
-                // runtime: 'automatic'
+                // Rule out that PURE markers are 
+                pure: false
               },
             ],
             [
@@ -66,7 +63,7 @@ const webpackConfig = {
             [
               "@babel/plugin-transform-classes",
               {
-                loose: false,
+                loose: true,
               },
             ],
             //*/
@@ -82,6 +79,8 @@ const webpackConfig = {
     new webpack.DefinePlugin({
       "process.env.NODE_ENV": JSON.stringify("development"),
     }),
+
+    new CleanWebpackPlugin(),
 
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({
@@ -100,54 +99,3 @@ const webpackConfig = {
     }),
   ],
 };
-
-// Remove all content of build path
-fs.emptyDirSync(buildPath);
-
-// Start the webpack build
-new Promise((resolve, reject) => {
-  webpack(webpackConfig).run((err, stats) => {
-    let messages;
-    if (err) {
-      if (!err.message) {
-        return reject(err);
-      }
-
-      let errMessage = err.message;
-
-      messages = formatWebpackMessages({
-        errors: [errMessage],
-        warnings: [],
-      });
-    } else {
-      messages = formatWebpackMessages(
-        stats.toJson({ all: false, warnings: true, errors: true })
-      );
-    }
-    if (messages.errors.length) {
-      return reject(new Error(messages.errors.join("\n\n")));
-    }
-    return resolve(messages.warnings);
-  });
-})
-  .then(
-    (warnings) => {
-      if (warnings.length) {
-        console.log(chalk.yellow("Compiled with warnings.\n"));
-        console.log(warnings.join("\n\n"));
-      } else {
-        console.log(chalk.green("Compiled successfully.\n"));
-      }
-    },
-    (err) => {
-      console.log(chalk.red("Failed to compile.\n"));
-      printBuildError(err);
-      process.exit(1);
-    }
-  )
-  .catch((err) => {
-    if (err && err.message) {
-      console.log(err.message);
-    }
-    process.exit(1);
-  });
