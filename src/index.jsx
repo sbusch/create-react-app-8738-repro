@@ -15,7 +15,7 @@ class PojoTest {
 class ComponentWithoutJsx extends React.Component {
   First = () => React.createElement(this.Second, null); // this.Second();
   Second = () =>
-    React.createElement("span", null, "SUCCESS (ComponentWithoutJsx)");
+    React.createElement("div", null, "SUCCESS (ComponentWithoutJsx)");
 
   render() {
     // return this.First();
@@ -24,12 +24,12 @@ class ComponentWithoutJsx extends React.Component {
 }
 
 // Component with JSX -> no problem
-// const Global = () => <span>WORKS (global var)</span>;
+// const Global = () => <div>WORKS (global var)</div>;
 class ComponentWithJsx extends React.Component {
   First = () => <this.Second />; // <- problem
   // First = () => <Global />; // <- no problem
 
-  Second = () => <span>SUCCESS (ComponentWithJsx)</span>;
+  Second = () => <div>SUCCESS (ComponentWithJsx)</div>;
 
   render() {
     return <this.First />;
