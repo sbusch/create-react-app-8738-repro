@@ -4,7 +4,7 @@ This is a repro for[ `facebook/create-react-app`](https://github.com/facebook/cr
 
 `create-react-app` has been ejected and reducted to the absolute minimum.
 
-Steps to reproduce:
+## Steps to reproduce
 
 - checkout the repo. within the repo:
 - `yarn install`
@@ -13,13 +13,13 @@ Steps to reproduce:
 
 Open <http://localhost:5000> in your browser.
 
-Expected outcome:
+## Expected outcome
 
 1. devtools console: `Success (PojoTest)`
 2. rendered component: `SUCCESS (ComponentWithoutJsx)` and
 3. rendered component `SUCCESS (ComponentWithJsx)`
 
-Actual results:
+## Actual results
 
 1. devtools console: `Success (PojoTest)` (ok)
 2. rendered component: `SUCCESS (ComponentWithoutJsx)` (ok) but
