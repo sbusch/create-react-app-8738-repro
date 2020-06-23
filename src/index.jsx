@@ -1,7 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-
 // Plain old JavaScript class -> no problem
 class PojoTest {
   First = () => this.Second();

@@ -44,6 +44,7 @@ module.exports = {
         loader: require.resolve("babel-loader"),
         options: {
           plugins: [
+            //*
             [
               "@babel/plugin-transform-react-jsx",
               {
@@ -51,6 +52,8 @@ module.exports = {
                 pure: false,
               },
             ],
+            //*/
+            //*
             [
               "@babel/plugin-proposal-class-properties",
               {
@@ -59,6 +62,7 @@ module.exports = {
                 loose: true,
               },
             ],
+            //*/
             //*
             [
               "@babel/plugin-transform-classes",
