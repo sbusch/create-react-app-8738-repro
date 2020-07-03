@@ -48,7 +48,7 @@ module.exports = {
             [
               "@babel/plugin-transform-react-jsx",
               {
-                // Rule out that PURE markers are
+                // Rule out that PURE markers are the culprit
                 pure: false,
               },
             ],
